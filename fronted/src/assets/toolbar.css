@@ -1,80 +1,42 @@
 .toolbar input,
-.toolbar select{
-
+.toolbar select {
   padding: 10px 14px;
-
   border-radius: 12px;
-
   border: none;
-
   background: var(--card);
-  
   color: var(--text);
-
   font-size: 14px;
-
   transition: 0.2s;
 }
 
-.toolbar input::placeholder{
+/* Placeholder SIEMPRE visible */
+.toolbar input::placeholder {
   color: var(--text);
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
-.toolbar select option{
+/* Opciones del select */
+.toolbar select option {
   background: var(--card);
   color: var(--text);
 }
 
-.toolbar input,
-.toolbar select{
-
-  padding: 10px 14px;
-
-  border-radius: 12px;
-
-  border: none;
-
-  background: rgba(255,255,255,0.08);
-
-  color: var(--text);
-
-  font-size: 14px;
-
-  transition: 0.2s;
-}
-
-.toolbar input::placeholder{
-  color: rgba(255,255,255,0.6);
-}
-
+/* Focus */
 .toolbar input:focus,
-.toolbar select:focus{
-
+.toolbar select:focus {
   outline: none;
-
   transform: translateY(-1px);
-
   box-shadow: 0 0 0 2px var(--primary);
 }
 
-.toolbar select{
-  cursor: pointer;
-}
-
+/* Light theme override (solo si necesitas contraste extra) */
 [data-theme="light"] .toolbar input,
-[data-theme="light"] .toolbar select{
-
-  background: rgba(0,0,0,0.06);
-
-  color: black;
+[data-theme="light"] .toolbar select {
+  background: var(--card);
+  color: var(--text);
 }
 
-[data-theme="light"] .toolbar input::placeholder{
-  color: rgba(0,0,0,0.5);
-}
-
-[data-theme="light"] .toolbar select option{
-  background: white;
-  color: black;
+[data-theme="light"] .toolbar input::placeholder {
+  color: var(--text);
+  opacity: 0.5;
 }
