@@ -1,0 +1,14 @@
+[data-theme="dark"]{
+  --bg:#111;
+  --card:#1f1f1f;
+  --text:#fff;
+
+  --primary:#00c896;
+  --primary-hover:#00a87d;
+
+  --danger:#ff4d4d;
+  --danger-hover:#d93636;
+
+  --secondary:#666;
+  --secondary-hover:#444;
+}

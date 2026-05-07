@@ -1,0 +1,18 @@
+[data-theme="sakura"]{
+  --bg:#ffeef5;
+  --card:#ffffff;
+  --text:#5a2a42;
+
+  --primary:#ff69b4;
+  --primary-hover:#e754a2;
+
+  --danger:#d63384;
+  --danger-hover:#b82c70;
+
+  --secondary:#c08497;
+  --secondary-hover:#a96c82;
+
+  --input-bg: #fff0f6;
+  --input-text: #5a2a42;
+  --input-border: #f8bbd0;
+}

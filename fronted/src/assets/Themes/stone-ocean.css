@@ -1,0 +1,18 @@
+[data-theme="stone-ocean"]{
+  --bg:#0b1f33;
+  --card:#16324f;
+  --text:#e6f4ff;
+
+  --primary:#00bcd4;
+  --primary-hover:#0097a7;
+
+  --danger:#ff5252;
+  --danger-hover:#e53935;
+
+  --secondary:#607d8b;
+  --secondary-hover:#455a64;
+
+  --input-bg: #1b3a57;
+  --input-text: #e6f4ff;
+  --input-border: #2c5d7a;
+}

@@ -1,0 +1,33 @@
+.card{
+  background:var(--card);
+  padding:12px;
+  border-radius:12px;
+  margin-top:12px;
+}
+
+.card p{
+  margin:8px 0;
+  line-height:1.4;
+
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.card button{
+  margin-right:8px;
+  margin-top:6px;
+}
+
+small{
+  color:gray;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}

@@ -1,0 +1,18 @@
+[data-theme="forest"]{
+  --bg:#102417;
+  --card:#1d3a24;
+  --text:#d8ffe0;
+
+  --primary:#4caf50;
+  --primary-hover:#3d9441;
+
+  --danger:#c62828;
+  --danger-hover:#a61f1f;
+
+  --secondary:#5c7a60;
+  --secondary-hover:#48614c;
+
+  --input-bg: #244d2c;
+  --input-text: #d8ffe0;
+  --input-border: #3a6b45;
+}
