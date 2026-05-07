@@ -1,4 +1,6 @@
 <script setup>
+import "../assets/toolbar.css";
+
 defineProps({
   search: String,
   fontFamily: String,
@@ -25,7 +27,7 @@ defineEmits([
       placeholder="Buscar texto o fecha..."
     />
 
-    <br><br>
+    
 
     <select
       :value="fontFamily"
@@ -39,7 +41,7 @@ defineEmits([
       <option value="monospace">Monospace</option>
     </select>
 
-    <br><br>
+    
 
     <select
   :value="filter"
