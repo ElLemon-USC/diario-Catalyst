@@ -1,5 +1,5 @@
 
-.overlay{
+.reader-box .overlay{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.75);
@@ -17,12 +17,12 @@
   border-radius:16px;
 }
 
-p{
+.reader-box p{
   min-height:220px;
   white-space:pre-wrap;
   line-height:1.6;
 }
 
-button{
+.reader-box button{
   margin-right:10px;
 }

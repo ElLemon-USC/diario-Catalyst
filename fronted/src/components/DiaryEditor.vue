@@ -26,6 +26,17 @@ defineEmits([
     placeholder="Escribe tu pensamiento..."
   ></textarea>
 
+  <p 
+  v-if="visibility !== 'private'"
+  class="limit-text" 
+  > 
+  {{  
+    visibility === "public"
+    ? `${text.length}/333 caracteres`
+    : `${text.length}/120 caracteres`
+  }}
+</p>
+
   <div class="editor-options">
 
     <select
@@ -48,7 +59,10 @@ defineEmits([
   </div>
 
   <div class="editor-actions">
-    <button @click="$emit('save')">
+    <button
+     @click="$emit('save')"
+      :disabled="visibility === 'public' && text.length > 333"
+      >
       {{ editingId ? "Actualizar" : "Guardar" }}
     </button>
 

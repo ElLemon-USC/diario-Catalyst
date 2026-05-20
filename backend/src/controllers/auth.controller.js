@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { registerSchema, loginSchema } from "../validators/auth.validator.js";
 
 //  REGISTER
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
   console.log(req.body);
   
   try {
@@ -41,9 +41,8 @@ if (error) {
     await user.save();
 
     res.json({ message: "Usuario registrado correctamente" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: error.message });
+  } catch (next) {
+    next(error);
   }
 };
 
@@ -87,8 +86,7 @@ if (error) {
       token,
     });
 
-  } catch (error) {
-  console.log(error);
-  res.status(500).json({ error: error.message });
+  } catch (next) {
+    next(error);
 }
 };

@@ -2,13 +2,35 @@ import Diary from "../models/diary.model.js";
 import User from "../models/user.model.js";
 
 // Crear entrada
-export const createEntry = async (req, res) => {
+export const createEntry = async (req, res, next) => {
   try {
     const { content, fontFamily, visibility, sharedWith } = req.body;
 
+    if (
+      visibility === "public" &&
+      content.length > 333
+    ) {
+      return res.status(400).json({
+        message: "La entrada pública no puede superar los 333 caracteres"
+      });
+    }
+
+    if (
+      visibility === "shared" &&
+      content.length > 120
+    ) {
+      return res.status(400).json({
+        message: "La entrada compartida no puede superar los 120 caracteres"
+      });
+    }
+
     let usersShared = [];
 
-    if (visibility === "shared" && sharedWith.length) {
+   if (
+       visibility === "shared" &&
+       sharedWith &&
+       sharedWith.length
+      ) {
       const users = await User.find({
         username: { $in: sharedWith }
       });
@@ -29,12 +51,12 @@ export const createEntry = async (req, res) => {
     res.json({ message: "Entrada guardada" });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // Ver entradas
-export const getEntries = async (req, res) => {
+export const getEntries = async (req, res, next) => {
   try {
     const entries = await Diary.find({
       $or: [
@@ -52,12 +74,12 @@ export const getEntries = async (req, res) => {
     res.json(entries);
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+   next(error);
   }
 };
 
 // Eliminar SOLO del usuario dueño
-export const deleteEntry = async (req, res) => {
+export const deleteEntry = async (req, res, next) => {
   try {
     await Diary.findOneAndDelete({
       _id: req.params.id,
@@ -67,18 +89,38 @@ export const deleteEntry = async (req, res) => {
     res.json({ message: "Entrada eliminada" });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // Editar-actualizar las entradas 
-export const updateEntry = async (req, res) => {
+export const updateEntry = async (req, res, next) => {
   try {
     const { content, fontFamily, visibility, sharedWith } = req.body;
 
+    if (visibility === "public" &&
+      content.length > 333
+    ) {
+      return res.status(400).json({
+        message: "La entrada pública no puede superar los 333 caracteres"
+      });
+    }
+
+    if (visibility === "shared" &&
+      content.length > 120
+    ) {
+      return res.status(400).json({
+        message: "La entrada compartida no puede superar los 120 caracteres"
+      });
+    }
+
     let usersShared = [];
 
-    if (visibility === "shared" && sharedWith.length) {
+    if (
+      visibility === "shared" &&
+      sharedWith &&
+      sharedWith.length
+    ) {
       const users = await User.find({
         username: { $in: sharedWith }
       });
@@ -102,11 +144,11 @@ export const updateEntry = async (req, res) => {
     res.json({ message: "Entrada actualizada" });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-export const toggleFavorite = async (req, res) => {
+export const toggleFavorite = async (req, res, next) => {
   try {
     const entry = await Diary.findOne({
       _id: req.params.id,
@@ -129,8 +171,6 @@ export const toggleFavorite = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({
-      error: error.message
-    });
+    next(error);
   }
 };

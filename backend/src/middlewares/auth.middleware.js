@@ -8,7 +8,7 @@ export const verifyToken = (req, res, next) => {
       return res.status(401).json({ message: "No hay token" });
     }
 
-    //  AQUÍ ESTÁ LA CLAVE
+    
     const token = authHeader.split(" ")[1];
 
     if (!token) {

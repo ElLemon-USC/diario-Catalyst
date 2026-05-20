@@ -31,6 +31,7 @@ const editingId = ref(null);
 const theme = ref("dark");
 const visibility = ref("private");
 const sharedWith = ref("");
+const errorMessage = ref("");
 const myUserId = ref("");
 
 watch(theme, (newTheme) => {
@@ -86,8 +87,9 @@ const checkToken = () => {
 
 const sendDiary = async () => {
   try {
+    errorMessage.value = "";
     if (!text.value.trim()) {
-      alert("La entrada no puede estar vacía");
+      errorMessage.value = "La entrada no puede estar vacía";
       return;
     }
 
@@ -245,6 +247,8 @@ const toggleFavorite = async (entry) => {
 
   } catch (error) {
     console.error(error);
+
+    errorMessage.value = error.response?.data?.message || "Error al guardar entrada";
   }
 };
 
@@ -261,7 +265,9 @@ onMounted(() => {
   if (checkToken()) {
     loadEntries()
   }
-})
+});
+
+const comments = ref([])
 
 </script>
 
@@ -286,6 +292,10 @@ onMounted(() => {
     />
 
     <br><br>
+
+  <p v-if = "errorMessage" class="error-message">
+    {{ errorMessage }}
+  </p>
 
     <DiaryEditor
       :text="text"
