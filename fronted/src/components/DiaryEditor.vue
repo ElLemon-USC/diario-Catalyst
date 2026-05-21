@@ -4,7 +4,8 @@ defineProps({
   fontFamily: String,
   editingId: String,
   visibility: String,
-  sharedWith: String
+  sharedWith: String,
+  contenidoInvalido: Function
 });
 
 defineEmits([
@@ -61,7 +62,10 @@ defineEmits([
   <div class="editor-actions">
     <button
      @click="$emit('save')"
-      :disabled="visibility === 'public' && text.length > 333"
+      :disabled="
+      (visibility === 'public' && text.length > 333)
+      || (visibility === 'shared' && text.length > 120)
+      "
       >
       {{ editingId ? "Actualizar" : "Guardar" }}
     </button>

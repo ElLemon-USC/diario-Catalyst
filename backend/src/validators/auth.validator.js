@@ -12,7 +12,12 @@ export const registerSchema = Joi.object({
 
   password: Joi.string()
     .min(6)
-    .required()
+    .required(),
+
+  role: Joi.string(),
+
+  adminPassword: Joi.string()
+  .allow()
 });
 
 export const loginSchema = Joi.object({
@@ -22,5 +27,11 @@ export const loginSchema = Joi.object({
 
   password: Joi.string()
     .min(6)
-    .required()
+    .required(),
+
+  loginAdmin: Joi.boolean(),
+
+  adminPassword: Joi.string()
+    .allow()
+
 });

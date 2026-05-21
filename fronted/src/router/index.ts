@@ -26,15 +26,13 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
 
   const token = sessionStorage.getItem("token");
 
   if (to.meta.requiresAuth && !token) {
-    return next("/auth");
+    return "/auth";
   }
-
-  next();
 });
 
 export default router;

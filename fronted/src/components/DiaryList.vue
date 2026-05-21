@@ -5,10 +5,11 @@ defineProps({
   entries: Array,
   decodeText: Function,
   formatDate: Function,
-  myUserId: String
+  myUserId: String,
+  isAdmin: Boolean
 });
 
-defineEmits(["favorite", "read", "edit", "delete"]);
+defineEmits(["favorite", "read", "edit", "delete", "block-entry", "block-user"]);
 </script>
 
 <template>
@@ -20,11 +21,15 @@ defineEmits(["favorite", "read", "edit", "delete"]);
       :decodeText="decodeText"
       :formatDate="formatDate"
       :myUserId="myUserId"
+      :isAdmin="isAdmin"
 
       @favorite="$emit('favorite', $event)"
       @read="$emit('read', $event)"
       @edit="$emit('edit', $event)"
       @delete="$emit('delete', $event)"
+      @block-entry="$emit('block-entry', $event)"
+      @block-user="$emit('block-user', $event)"
+      
     />
   </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import api from "../services/api";
 import "../assets/auth.css";
 import { useAuthStore } from "../stores/auth";
@@ -9,7 +9,16 @@ const mode = ref("login");
 const username = ref("");
 const email = ref("");
 const password = ref("");
+const isAdmin = ref(false);
+const adminPassword = ref("");
+const loginAdmin = ref(false);
 const authStore = useAuthStore();
+
+watch(mode, () => {
+   loginAdmin.value = false;
+   isAdmin.value = false;
+   adminPassword.value = "";
+});
 
 const submit = async () => {
 
@@ -43,7 +52,10 @@ const submit = async () => {
       await api.post("/auth/register", {
         username: username.value,
         email: email.value,
-        password: password.value
+        password: password.value,
+
+        role: isAdmin.value ? "admin" : "user",
+        adminPassword: adminPassword.value
       });
 
       alert("Usuario creado");
@@ -55,7 +67,9 @@ const submit = async () => {
       "/auth/login",
       {
         email: email.value,
-        password: password.value
+        password: password.value,
+        loginAdmin: loginAdmin.value,
+        adminPassword: adminPassword.value,
       }
     );
 
@@ -63,9 +77,14 @@ const submit = async () => {
     location.reload();
 
   } catch (error) {
-    alert("Error");
-    console.error(error);
-  }
+
+  console.error(error);
+
+  alert(
+    error.response?.data?.message ||
+    "Error en autenticación"
+  );
+ }
 };
 </script>
 
@@ -87,6 +106,31 @@ const submit = async () => {
       v-model="password"
       type="password"
       placeholder="Password"
+    />
+
+    <label v-if="mode === 'register'">
+      <input
+        type="checkbox"
+        v-model="isAdmin"
+      />
+      Crear como Admin
+    </label>
+
+    <label v-if="mode === 'login'">
+      <input
+        type="checkbox"
+        v-model="loginAdmin"
+      />
+      Entrar como Admin
+    </label>
+
+    <input v-if="
+     (mode === 'register' && isAdmin) ||
+     (mode === 'login' && loginAdmin)
+     "
+      v-model="adminPassword"
+      type="password"
+      placeholder="Contraseña Admin"
     />
 
     <button @click="submit">

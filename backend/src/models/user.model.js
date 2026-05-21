@@ -21,8 +21,23 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+
+  IntentosFallidos: {
+    type: Number,
+    default: 0,
+  },
+
+  BloquearHasta: {
+    type: Date,
+    default: null,
+  },
+
+  blocked: {
+    type: Boolean,
+    default: false,
   }
-  
+
 }, {
   timestamps: true
 });

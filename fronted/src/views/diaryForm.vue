@@ -32,7 +32,9 @@ const theme = ref("dark");
 const visibility = ref("private");
 const sharedWith = ref("");
 const errorMessage = ref("");
+const palabrasProhibidas = ["hack", "virus"];
 const myUserId = ref("");
+const isAdmin = ref(false);
 
 watch(theme, (newTheme) => {
   document.body.setAttribute("data-theme", newTheme)
@@ -72,6 +74,7 @@ const checkToken = () => {
     }
 
     myUserId.value = payload.id;
+    isAdmin.value = payload.role === "admin";
 
     return true;
 
@@ -82,6 +85,19 @@ const checkToken = () => {
 
     return false;
   }
+};
+
+const contenidoInvalido = () => {
+  const lower = text.value.toLowerCase();
+
+  const contieneProhibida = palabrasProhibidas.some(palabra => lower.includes(palabra));
+  const Numeros =
+  text.value.match(/\d/g) || [];
+  
+  return (
+    Numeros.length > 35 ||
+    contieneProhibida
+  );
 };
 
 
@@ -253,6 +269,57 @@ const toggleFavorite = async (entry) => {
 };
 
 
+const blockEntry = async (entry) => {
+
+  try {
+
+    await api.put(`/diary/block-entry/${entry._id}`);
+
+    if(entry.blocked) {
+      alert("Entrada bloqueada");
+    } else {
+      alert("Entrada desbloqueada");
+    }
+
+    loadEntries();
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      error.response?.data?.message ||
+      "Error al bloquear entrada"
+    );
+  }
+};
+
+const blockUser = async (entry) => {
+
+  try {
+
+    await api.put(`/diary/block-user/${entry.user._id}`);
+
+    if(entry.user.blocked) {
+    alert("Usuario baneado");
+    } else {
+      alert("Usuario desbaneado");
+    }
+
+    loadEntries();
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      error.response?.data?.message ||
+      "Error al bloquear usuario"
+    );
+  }
+};
+
+
 onMounted(() => {
   const savedTheme = localStorage.getItem("theme")
 
@@ -297,12 +364,20 @@ const comments = ref([])
     {{ errorMessage }}
   </p>
 
+  <p
+    v-if="contenidoInvalido()"
+    class="error-message"
+  >
+    El contenido es sospechoso
+  </p>
+
     <DiaryEditor
       :text="text"
       :fontFamily="fontFamily"
       :editingId="editingId"
       :visibility="visibility"
       :sharedWith="sharedWith"
+      :contenidoInvalido="contenidoInvalido"
 
       @update:text="text = $event"
       @update:visibility="visibility = $event"
@@ -318,11 +393,14 @@ const comments = ref([])
   :decodeText="decodeText"
   :formatDate="formatDate"
   :myUserId="myUserId"
+  :isAdmin="isAdmin"
   
   @favorite="toggleFavorite"
   @read="openReader"
   @edit="editDiary"
   @delete="deleteDiary"
+  @block-entry="blockEntry"
+  @block-user="blockUser"
 />
 
 <DiaryReader

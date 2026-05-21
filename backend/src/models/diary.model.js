@@ -41,6 +41,11 @@ allowedUsers: [
   }
 ],
 
+blocked: {
+    type: Boolean,
+    default: false
+},
+
 }, { timestamps: true });
 
 export default mongoose.model("Diary", diarySchema);

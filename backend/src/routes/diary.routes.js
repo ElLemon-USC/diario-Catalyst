@@ -1,12 +1,13 @@
 import express from "express";
 import roleMiddleware from "../middlewares/role.middleware.js";
-
 import {
   createEntry,
   getEntries,
   deleteEntry,
   updateEntry,
-  toggleFavorite
+  toggleFavorite,
+  blockEntry,
+  blockUser
 } from "../controllers/diary.controller.js";
 
 import { verifyToken } from "../middlewares/auth.middleware.js";
@@ -32,5 +33,9 @@ router.put("/:id", verifyToken, updateEntry);
 
 //marcado favorito
 router.put("/:id/favorite", verifyToken, toggleFavorite);
+
+router.put ("/block-entry/:id", verifyToken, roleMiddleware("admin"), blockEntry);
+
+router.put ("/block-user/:id", verifyToken, roleMiddleware("admin"), blockUser);
 
 export default router;
