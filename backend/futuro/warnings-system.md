@@ -1,145 +1,116 @@
-// =====================================================
-// SISTEMA DE WARNINGS + BLOQUEO TEMPORAL
-// =====================================================
+﻿# Warnings y bloqueo temporal
 
-// QUE HACE:
-// Da advertencias automáticas al usuario.
-//
-// Si acumula demasiadas advertencias:
-// se bloquea temporalmente.
-//
-// Este sistema sirve para:
-// - spam
-// - insultos
-// - lenguaje ofensivo
-// - demasiados reportes
-// - comportamiento sospechoso
+//backend
+//backend/src/models/user.model.js
+// BloquearHasta: { type: Date, default: null },
 
-
-
-// =====================================================
-// BACKEND
-// =====================================================
-
-
-
-// =====================================================
-// USER.MODEL.JS
-// =====================================================
-
-// Agregar esto al modelo User
-
+```js
 warnings: {
   type: Number,
   default: 0
 },
-
 blockedUntil: {
   type: Date,
   default: null
 },
+```
 
+//backend
+//backend/src/controllers/auth.controller.js
+// if (user.blocked) {
 
-
-// =====================================================
-// AUTH.CONTROLLER.JS
-// =====================================================
-
-// Evitar login si sigue bloqueado
-
-if (
-  user.blockedUntil &&
-  user.blockedUntil > new Date()
-) {
-
+```js
+if (user.blockedUntil && user.blockedUntil > new Date()) {
   return res.status(403).json({
     message: "Usuario bloqueado temporalmente"
   });
 }
 
-
-
-// =====================================================
-// DIARY.CONTROLLER.JS
-// =====================================================
-
-// EJEMPLO:
-//
-// Detectar palabras prohibidas
-// o spam sospechoso
-
-const bannedWords = [
-  "hack",
-  "virus",
-  "spam"
-];
-
-const lowerContent =
- content.toLowerCase();
-
-const suspicious =
- bannedWords.some(word =>
-   lowerContent.includes(word)
- );
-
-
-
-// =====================================================
-// AUMENTAR WARNINGS
-// =====================================================
-
-if (suspicious) {
-
-  user.warnings += 1;
-
-
-
-  // =====================================================
-  // BLOQUEAR SI LLEGA AL LIMITE
-  // =====================================================
-
-  if (user.warnings >= 3) {
-
-    // bloquear 1 minuto
-
-    user.blockedUntil =
-      new Date(Date.now() + 60000);
-
-    // reiniciar warnings
-
-    user.warnings = 0;
-  }
-
+if (user.blockedUntil && user.blockedUntil <= new Date()) {
+  user.blockedUntil = null;
+  user.warnings = 0;
   await user.save();
+}
+```
 
-  return res.status(400).json({
-    message:
-    "Contenido sospechoso detectado"
+//backend
+//backend/src/controllers/diary.controller.js
+// const { content, fontFamily, visibility, sharedWith } = req.body;
+
+```js
+const suspiciousWords = ["hack", "virus", "spam", "insulto", "troll"];
+```
+
+```js
+if (user.blockedUntil && user.blockedUntil > new Date()) {
+  return res.status(403).json({
+    message: "Usuario bloqueado temporalmente"
   });
 }
 
+if (user.blockedUntil && user.blockedUntil <= new Date()) {
+  user.blockedUntil = null;
+  user.warnings = 0;
+  await user.save();
+}
+```
 
+// const lowerContent = content.toLowerCase();
 
-// =====================================================
-// FRONTEND
-// =====================================================
+```js
+const lowerContent = content.toLowerCase();
+const suspicious = suspiciousWords.some((word) => lowerContent.includes(word));
+if (suspicious) {
+  user.warnings += 1;
+  if (user.warnings >= 3) {
+    user.blockedUntil = new Date(Date.now() + 60 * 1000);
+    user.warnings = 0;
+  }
+  await user.save();
+  return res.status(400).json({
+    message: "Contenido sospechoso detectado. Se ha registrado una advertencia."
+  });
+}
+```
 
-// Mostrar mensaje del backend
+---
 
-alert(
- error.response?.data?.message
-);
+## Frontend
 
+//fronted
+//fronted/src/components/DiaryEditor.vue
+// <textarea :value="text"
 
+```js
+<div v-if="warningMessage" class="warning-alert">
+   {{ warningMessage }}
+</div>
 
-// =====================================================
-// IDEAS EXTRA
-// =====================================================
+<textarea
+  :value="text"
+  @input="$emit('update:text', $event.target.value)"
+  :style="{ fontFamily: fontFamily }"
+  placeholder="Escribe tu pensamiento..."
+></textarea>
+```
 
-// Cambiar duración del bloqueo:
-//
-// 60000 = 1 minuto
-// 300000 = 5 minutos
-// 3600000 = 1 hora
+//fronted
+//fronted/src/views/diaryForm.vue
+// const response = await api.post("/diary", {
 
-
+```js
+try {
+  const response = await api.post("/diary", {
+    content: text.value,
+    fontFamily: fontFamily.value,
+    visibility: visibility.value,
+    sharedWith: sharedWith.value.split(",").map(u => u.trim())
+  });
+  
+  if (response.status === 400 && response.data.message.includes("sospechoso")) {
+    warningMessage.value = response.data.message;
+  }
+} catch (error) {
+  warningMessage.value = error.response?.data?.message || "Error al guardar";
+}
+```
