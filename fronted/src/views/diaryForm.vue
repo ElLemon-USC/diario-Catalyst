@@ -245,6 +245,7 @@ const cancelEdit = () => {
 
 const openReader = (entry) => {
   readingEntry.value = entry;
+  alert("Abriendo modo lectura");
 };
 
 const closeReader = () => {
@@ -273,15 +274,17 @@ const blockEntry = async (entry) => {
 
   try {
 
+    const wasBlocked = entry.blocked;
+
     await api.put(`/diary/block-entry/${entry._id}`);
 
-    if(entry.blocked) {
-      alert("Entrada bloqueada");
-    } else {
-      alert("Entrada desbloqueada");
-    }
+    alert(
+      wasBlocked
+      ? "Entrada desbloqueada"
+      : "Entrada bloqueada"
+    );
 
-    loadEntries();
+    await loadEntries();
 
   } catch (error) {
 
@@ -300,13 +303,17 @@ const blockUser = async (entry) => {
 
     await api.put(`/diary/block-user/${entry.user._id}`);
 
+    entry.user.blocked = !entry.user.blocked;
+
     if(entry.user.blocked) {
-    alert("Usuario baneado");
+      alert("Usuario baneado");
     } else {
       alert("Usuario desbaneado");
     }
 
-    loadEntries();
+    setTimeout(() => {
+      loadEntries();
+    }, 300);
 
   } catch (error) {
 
@@ -404,12 +411,15 @@ const comments = ref([])
 />
 
 <DiaryReader
-  v-if="readingEntry"
+  v-if="readingEntry !== null"
   :entry="readingEntry"
   :decodeText="decodeText"
   @close="closeReader"
 />
 
+    <p v-if="readingEntry">
+      TEST READING ENTRY
+    </p>
 
   </MainLayout>
 </template>

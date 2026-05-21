@@ -99,7 +99,7 @@ export const getEntries = async (req, res, next) => {
 
     if(req.user.role === "admin") {
       entries = await Diary.find()
-      .populate("user", "username")
+      .populate("user", "username blocked")
       .sort({ createdAt: -1 });
     }
     else {
