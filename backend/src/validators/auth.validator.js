@@ -14,10 +14,15 @@ export const registerSchema = Joi.object({
     .min(6)
     .required(),
 
+  description: Joi.string()
+    .min(30)
+    .max(100)
+    .required(),
+
   role: Joi.string(),
 
   adminPassword: Joi.string()
-  .allow("")
+    .allow("")
 });
 
 export const loginSchema = Joi.object({

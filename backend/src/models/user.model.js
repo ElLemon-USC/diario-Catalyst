@@ -23,6 +23,13 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
+  description: {
+    type: String,
+    required: true,
+    minlength: 30,
+    maxlength: 100,
+  },
+
   IntentosFallidos: {
     type: Number,
     default: 0,
