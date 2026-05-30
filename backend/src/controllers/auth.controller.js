@@ -16,7 +16,7 @@ if (error) {
     error: error.details[0].message
   });
 }
-    const { username, email, password, role, adminPassword, description } = req.body;
+    const { username, email, password, role, adminPassword } = req.body;
     const existUser = await User.findOne({
       $or: [
         { email },
@@ -47,8 +47,7 @@ if (error) {
       username,
       email,
       password: hashedPassword,
-      role: finalRole,
-      description
+      role: finalRole
     });
 
     await user.save();
@@ -72,7 +71,7 @@ export const login = async (req, res, next) => {
       });
     }
 
-    const {email, password, adminPassword, loginAdmin} = req.body;
+    const { email, password, adminPassword, loginAdmin } = req.body;
 
     const user = await User.findOne({ email });
 

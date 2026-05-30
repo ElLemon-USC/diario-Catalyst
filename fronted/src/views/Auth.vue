@@ -13,7 +13,6 @@ const isAdmin = ref(false);
 const adminPassword = ref("");
 const loginAdmin = ref(false);
 const authStore = useAuthStore();
-const description = ref("");
 
 watch(mode, () => {
    loginAdmin.value = false;
@@ -46,13 +45,7 @@ const submit = async () => {
     return;
   }
 
-  if (mode.value === "register") {
-    const descriptionLength = description.value.trim().length;
-    if (descriptionLength < 30 || descriptionLength > 100) {
-      alert("La descripción debe tener entre 30 y 100 caracteres");
-      return;
-    }
-  }
+
 
   try {
 
@@ -62,7 +55,6 @@ const submit = async () => {
         username: username.value,
         email: email.value,
         password: password.value,
-        description: description.value.trim(),
         role: isAdmin.value ? "admin" : "user",
         adminPassword: adminPassword.value
       });
@@ -116,9 +108,6 @@ const submit = async () => {
       type="password"
       placeholder="Password"
     />
-
-    <input v-model="description" placeholder="description"/>
-
 
     <label v-if="mode === 'register'">
       <input

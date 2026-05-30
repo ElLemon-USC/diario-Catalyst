@@ -13,12 +13,6 @@ export const registerSchema = Joi.object({
   password: Joi.string()
     .min(6)
     .required(),
-
-  description: Joi.string()
-    .min(30)
-    .max(100)
-    .required(),
-
   role: Joi.string(),
 
   adminPassword: Joi.string()

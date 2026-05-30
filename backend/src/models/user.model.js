@@ -22,13 +22,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
-  description: {
-    type: String,
-    required: true,
-    minlength: 30,
-    maxlength: 100,
-  },
+ 
 
   IntentosFallidos: {
     type: Number,
